@@ -34,7 +34,7 @@ export function makeServer() {
     },
 
     seeds(server) {
-      server.createList('policy', 5);
+      server.createList('policy', 15);
     },
 
     routes() {
@@ -44,7 +44,8 @@ export function makeServer() {
         let { page = 1, pageSize = 10, search = '' } = request.queryParams;
         page = Number(page);
         pageSize = Number(pageSize);
-        let policies = schema.all('policy').models as Policy[]; 
+      
+        let policies = schema.all('policy').models as Policy[];
       
         if (Array.isArray(search)) {
           search = search.join(',');
@@ -56,13 +57,12 @@ export function makeServer() {
           );
         }
       
-        const totalItens = policies.length;
-        const totalPages = Math.ceil(totalItens / pageSize);
+        const totalItems = policies.length;
+        const totalPages = Math.ceil(totalItems / pageSize);
         const content = policies.slice((page - 1) * pageSize, page * pageSize);
       
-        return { content, page, totalItens, totalPages };
+        return { content, page, totalItems, totalPages };
       });
-      
 
       this.post('/apolices', (schema, request) => {
         let attrs = JSON.parse(request.requestBody) ;

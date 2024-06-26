@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Policy } from '../../types';
+import { Policy } from '../types';
 
 interface PolicyDetailsParams {
   id: number; 
