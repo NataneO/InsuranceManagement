@@ -1,8 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { PolicyList } from './components/PolicyList';
+import  PolicyList  from './components/PolicyList';
 import { PolicyDetails } from './components/PolicyDetails';
-import { PolicyForm } from './components/PolicyForm';
 
 
  const App: React.FC = () => {
@@ -11,7 +10,6 @@ import { PolicyForm } from './components/PolicyForm';
       <div>
         <Routes>
           <Route path="/" element={<PolicyList/>} />
-          <Route path="/create" element={<PolicyForm/>} />
           <Route path="/apolices/:id" element={<PolicyDetails/>} />
         </Routes>
       </div>

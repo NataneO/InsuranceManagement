@@ -13,3 +13,11 @@ export interface Policy {
       valor: number;
     }[];
   }
+
+ export interface ModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onSave: () => void;
+    title: string;
+    id?: number;
+  }

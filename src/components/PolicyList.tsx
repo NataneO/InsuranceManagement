@@ -8,7 +8,7 @@ if (process.env.NODE_ENV === "development") {
   makeServer();
 }
 
-export const PolicyList: React.FC = () => {
+const PolicyList: React.FC = () => {
   const [policies, setPolicies] = useState<Policy[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,6 +18,37 @@ export const PolicyList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
+
+  // Estilos para a tabela
+  const tableStyles = {
+    margin: 'auto',
+    borderCollapse: 'collapse',
+    width: '80%',
+    marginTop: '20px',
+  };
+
+  // Estilos para as células do cabeçalho
+  const thStyles = {
+    padding: '10px',
+    border: '1px solid black',
+    backgroundColor: '#f2f2f2',
+  };
+
+  // Estilos para as células de dados
+  const tdStyles = {
+    padding: '10px',
+    border: '1px solid black',
+  };
+
+  // Estilos para os botões
+  const buttonStyles = {
+    margin: '5px',
+    padding: '10px 20px',
+    backgroundColor: '#008CBA',
+    color: 'white',
+    border: 'none',
+    cursor: 'pointer',
+  };
 
   useEffect(() => {
     fetchPolicies();
@@ -84,51 +115,55 @@ export const PolicyList: React.FC = () => {
   }
 
   return (
-    <div>
+    <div style={{ textAlign: 'center' }}>
       <h1>Policy List</h1>
-      <table>
+      <table style={tableStyles}>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Número</th>
-            <th>Valor Prêmio</th>
-            <th>Segurado</th>
-            <th>Coberturas</th>
-            <th>Ações</th>
+            <th style={thStyles}>ID</th>
+            <th style={thStyles}>Número</th>
+            <th style={thStyles}>Valor Prêmio</th>
+            <th style={thStyles}>Segurado</th>
+            <th style={thStyles}>Coberturas</th>
+            <th style={thStyles}>Ações</th>
           </tr>
         </thead>
         <tbody>
           {policies.map((policy) => (
             <tr key={policy.id}>
-              <td>{policy.id}</td>
-              <td>{policy.numero}</td>
-              <td>{policy.valor_premio}</td>
-              <td>{policy.segurado.nome}</td>
-              <td>
+              <td style={tdStyles}>{policy.id}</td>
+              <td style={tdStyles}>{policy.numero}</td>
+              <td style={tdStyles}>{policy.valor_premio}</td>
+              <td style={tdStyles}>{policy.segurado.nome}</td>
+              <td style={tdStyles}>
                 {policy.coberturas.map((cobertura, index) => (
                   <span key={index}>{cobertura.nome}</span>
                 ))}
               </td>
-              <td>
-                <button onClick={() => handleOpenModal('edit', policy)}>Editar</button>
-                <button onClick={() => handleDelete(policy.id)}>Excluir</button>
+              <td style={tdStyles}>
+                <button style={{ ...buttonStyles, backgroundColor: '#4CAF50' }} onClick={() => handleOpenModal('edit', policy)}>Editar</button>
+                <button style={{ ...buttonStyles, backgroundColor: '#f44336' }} onClick={() => handleDelete(policy.id)}>Excluir</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <div>
-        <button onClick={handlePrevPage} disabled={currentPage === 1}>
+      <div style={{ marginTop: '20px' }}>
+        <button style={buttonStyles} onClick={handlePrevPage} disabled={currentPage === 1}>
           Página Anterior
         </button>
-        <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+        <button style={buttonStyles} onClick={handleNextPage} disabled={currentPage === totalPages}>
           Próxima Página
         </button>
       </div>
-      <button onClick={() => handleOpenModal('add')}>Adicionar Apólice</button>
+      <button style={{ ...buttonStyles, margin: '20px', backgroundColor: '#4CAF50' }} onClick={() => handleOpenModal('add')}>Adicionar Apólice</button>
 
+      //TODO: Colocar component modal aqui
+      
       <PolicyForm isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSavePolicy} title={modalTitle} id={itemId}>
       </PolicyForm>
     </div>
   );
 };
+
+export default PolicyList;
