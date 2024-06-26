@@ -1,81 +1,94 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 
 export const PolicyForm: React.FC = () => {
-  const [policy, setPolicy] = useState({ 
-    numero: '', 
-    valor_premio: '', 
-    segurado: { nome: '', email: '', cpf_cnpj: '' }, 
-    coberturas: [{ nome: '', valor: '' }] 
-  });
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    
+  const validationSchema = Yup.object().shape({
+    numero: Yup.number().required('Número é obrigatório'),
+    valor_premio: Yup.number().required('Valor do prêmio é obrigatório'),
+    segurado: Yup.object().shape({
+      nome: Yup.string().required('Nome do segurado é obrigatório'),
+      email: Yup.string().email('Email inválido').required('Email é obrigatório'),
+      cpf_cnpj: Yup.string().required('CPF/CNPJ é obrigatório'),
+    }),
+  });
 
-    if (name === 'numero' || name === 'valor_premio') {
-      setPolicy({ ...policy, [name]: value });
-    } else if (name.startsWith('segurado.')) {
-      const fieldName = name.split('.')[1]; 
-      setPolicy({
-        ...policy,
-        segurado: {
-          ...policy.segurado,
-          [fieldName]: value,
+
+  const handleSubmit = async (values: any) => {
+    try {
+      const response = await fetch('/api/apolices', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify(values),
       });
-    } else {
-      setPolicy({ ...policy, [name]: value });
+
+      if (response.ok) {
+        navigate('/');
+      } else {
+        console.error('Failed to submit form:', response);
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    fetch('/api/apolices', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(policy),
-    }).then(() => {
-     navigate('/')
-    });
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>
-          Número:
-          <input type="number" name="numero" value={policy.numero} onChange={handleChange} />
-        </label>
-      </div>
-      <div>
-        <label>
-          Valor Prêmio:
-          <input type="text" name="valor_premio" value={policy.valor_premio} onChange={handleChange} />
-        </label>
-      </div>
-      <div>
-        <label>
-          Nome:
-          <input type="text" name="segurado.nome" value={policy.segurado.nome} onChange={handleChange} />
-        </label>
-      </div>
-      <div>
-        <label>
-          Email:
-          <input type="text" name="segurado.email" value={policy.segurado.email} onChange={handleChange} />
-        </label>
-      </div>
-      <div>
-        <label>
-          CPF/CNPJ:
-          <input type="text" name="segurado.cpf_cnpj" value={policy.segurado.cpf_cnpj} onChange={handleChange} />
-        </label>
-      </div>
-      <button type="submit">Salvar</button>
-    </form>
+    <Formik
+      initialValues={{
+        numero: '',
+        valor_premio: '',
+        segurado: { nome: '', email: '', cpf_cnpj: '' },
+        coberturas: [{ nome: '', valor: '' }],
+      }}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      {({  }) => (
+        <Form>
+          <div>
+            <label>
+              Número:
+              <Field type="number" name="numero" />
+              <ErrorMessage name="numero" component="div" className="error" />
+            </label>
+          </div>
+          <div>
+            <label>
+              Valor Prêmio:
+              <Field type="number" name="valor_premio" />
+              <ErrorMessage name="valor_premio" component="div" className="error" />
+            </label>
+          </div>
+          <div>
+            <label>
+              Nome:
+              <Field type="text" name="segurado.nome" />
+              <ErrorMessage name="segurado.nome" component="div" className="error" />
+            </label>
+          </div>
+          <div>
+            <label>
+              Email:
+              <Field type="email" name="segurado.email" />
+              <ErrorMessage name="segurado.email" component="div" className="error" />
+            </label>
+          </div>
+          <div>
+            <label>
+              CPF/CNPJ:
+              <Field type="text" name="segurado.cpf_cnpj" />
+              <ErrorMessage name="segurado.cpf_cnpj" component="div" className="error" />
+            </label>
+          </div>
+          <button type="submit">Salvar</button>
+        </Form>
+      )}
+    </Formik>
   );
 };
+
