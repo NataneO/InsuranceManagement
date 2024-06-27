@@ -23,7 +23,7 @@ This project is a web application for managing insurance policies. It is built u
 ## Installation
 Clone the repository:
 ```bash
-git clone https://github.com/your-username/insurance-management.git
+git clone https://github.com/NataneO/InsuranceManagement.git
 cd insurance-management
 ```
 
