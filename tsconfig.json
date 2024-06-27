@@ -1,4 +1,9 @@
 {
+  
+    "compilerOptions": {
+      "types": ["@testing-library/jest-dom"]
+    },
+  
   "files": [],
   "references": [
     {

@@ -5,141 +5,10 @@ import { makeServer } from "../mocks/server";
 import PolicyModalContent from "./PolicyModalContent";
 import { Link } from "react-router-dom";
 import { FaEdit, FaInfoCircle, FaTrashAlt } from "react-icons/fa";
-
-
+import "../assets/styles/style.scss";
 if (process.env.NODE_ENV === "development") {
   makeServer();
 }
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px",
-    padding: "20px",
-   
-  },
- 
-  policyItemHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "15px",
-  },
-  headerTitle: {
-    fontSize: "18px",
-    fontWeight: "bold",
-    margin: 0,
-  },
-  
-  button: {
-    padding: 0,
-    backgroundColor: "transparent",
-    border: "none",
-    cursor: "pointer",
-    textAlign: "center",
-    fontSize: "16px",
-  },
-  editButton: {
-    color: "#111",
-  },
-  deleteButton: {
-    color: "#f44336",
-  },
-  detailsButton: {
-    color: "#007bff",
-    textDecoration: "none",
-    textAlign: "center",
-    fontSize: "16px",
-  },
-  policyDetails: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-    fontSize: "14px",
-    color: "#333",
-  },
-  detailItem: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  detailLabel: {
-    fontWeight: "bold",
-  },
-  policyStatus: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: "15px",
-  },
-  statusBadge: {
-    padding: "5px 10px",
-    borderRadius: "4px",
-    backgroundColor: "#28a745",
-    color: "#fff",
-    fontSize: "14px",
-  },
-  nextPayment: {
-    fontSize: "14px",
-    color: "#666",
-  },
-  pagination: {
-    display: "flex",
-    justifyContent: "center",
-    marginTop: "20px",
-  },
-  paginationButton: {
-    margin: "5px",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "4px",
-    backgroundColor: "#008CBA",
-    color: "#fff",
-    cursor: "pointer",
-  },
-  disabledButton: {
-    backgroundColor: "#ccc",
-    cursor: "not-allowed",
-  },
-  addPolicyButton: {
-    margin: "20px",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "4px",
-    backgroundColor: "#4CAF50",
-    color: "#fff",
-    cursor: "pointer",
-  },
-  coberturasCell: {
-  
-    whiteSpace: 'nowrap', 
-  },
-  coberturaItem: {
-    display: 'block',
-    marginBottom: '5px', 
-  },
-  tableContent:{
-    textAlign: 'left',
-    padding: '10px 0',
-  },
-  actionButtons:{
-    textAlign: 'center',
-    width: '70px'
-  },
-  mr5:{
-    marginRight: '5px',
-  },
-  policyItem:{
-    borderBottom: "1px solid #e0e0e0",
-   
-  },
-  table:{
-    borderCollapse: 'collapse',
-  },
-  thead:{
-    textAlign: 'left',
-  },
-};
 
 const PolicyList: React.FC = () => {
   const [policies, setPolicies] = useState<Policy[]>([]);
@@ -151,8 +20,6 @@ const PolicyList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, _setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
-
- 
 
   useEffect(() => {
     fetchPolicies();
@@ -213,81 +80,80 @@ const PolicyList: React.FC = () => {
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.policyItemHeader}>
-      <h1>Policy List</h1>
-      <button
-        style={styles.addPolicyButton}
-        onClick={() => handleOpenModal("add")}
-      >
-        Adicionar Apólice
-      </button>
+    <div className="container-wrapper">
+      <div className="policy-itemHeader">
+        <h1>Listagem de apólices</h1>
+        <button
+          className="btn-add-policy"
+          onClick={() => handleOpenModal("add")}
+        >
+          Adicionar Apólice
+        </button>
       </div>
-          <table style={styles.table}>
-            <thead style={styles.thead}>
-            <tr>
-              <th>Id</th>
-              <th>Número</th>
-              <th>Segurado</th>
-              <th>Valor premio</th>
-              <th>Coberturas</th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            {policies.map((policy) => (
-            <tr key={policy.id} style={styles.policyItem}>
-              <td style={styles.tableContent}>{policy.id}</td>
-              <td style={styles.tableContent}>{policy.numero}</td>
-              <td style={styles.tableContent}>{policy.segurado.nome}</td>
-              <td style={styles.tableContent}>{policy.valor_premio}</td>
-              <td style={{...styles.coberturasCell, ...styles.tableContent}}>
+      <table>
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Número</th>
+            <th>Segurado</th>
+            <th>Valor premio</th>
+            <th>Coberturas</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {policies.map((policy) => (
+            <tr key={policy.id} className="policy-item">
+              <td className="table-content">{policy.id}</td>
+              <td className="table-content">{policy.numero}</td>
+              <td className="table-content">{policy.segurado.nome}</td>
+              <td className="table-content">{policy.valor_premio}</td>
+              <td className="coverage-cell table-content">
                 {policy.coberturas.map((cobertura, index) => (
-                  <span key={index} style={styles.coberturaItem}>
+                  <span key={index} className="coverage-item">
                     {cobertura.nome}
                   </span>
                 ))}
-                </td>
-                <td style={styles.actionButtons}>
+              </td>
+              <td className="action-buttons">
                 <button
-                style={{...styles.mr5, ...styles.button, ...styles.editButton }}
-                onClick={() => handleOpenModal("edit", policy)}
-              >
-                <FaEdit />
-              </button>
-              <button
-                style={{ ...styles.mr5, ...styles.button, ...styles.deleteButton }}
-                onClick={() => handleOpenModal("del", policy)}
-              >
-                <FaTrashAlt />
-              </button>
-              <Link to={`/apolices/${policy.id}`} style={{...styles.mr5, ...styles.detailsButton}}>
-                <FaInfoCircle />
-              </Link>
-                </td>
+                  className="btn btn-edit"
+                  onClick={() => handleOpenModal("edit", policy)}
+                >
+                  <FaEdit />
+                </button>
+                <button
+                  className="btn btn-delete"
+                  onClick={() => handleOpenModal("del", policy)}
+                >
+                  <FaTrashAlt />
+                </button>
+                <Link to={`/apolices/${policy.id}`} className="btn btn-details">
+                  <FaInfoCircle />
+                </Link>
+              </td>
             </tr>
-                ))}
-            </tbody>
-          </table>
-      
-  
-      <div style={styles.pagination}>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="pagination-wrapper">
         <button
-          style={styles.paginationButton}
+          className="btn-pagination"
           onClick={handlePrevPage}
           disabled={currentPage === 1}
         >
           Página Anterior
         </button>
         <button
-          style={styles.paginationButton}
+          className="btn-pagination"
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
         >
           Próxima Página
         </button>
       </div>
-  
+
       <PolicyModalContent
         isOpen={isModalOpen}
         onClose={handleCloseModal}
