@@ -6,6 +6,7 @@ import PolicyModalContent from "./PolicyModalContent";
 import { Link } from "react-router-dom";
 import { FaEdit, FaInfoCircle, FaTrashAlt } from "react-icons/fa";
 import "../assets/styles/style.scss";
+import SearchBar from "./SearchBar";
 if (process.env.NODE_ENV === "development") {
   makeServer();
 }
@@ -20,6 +21,8 @@ const PolicyList: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, _setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
+  const [filteredItems, setFilteredItems] = useState([...policies]);
+  const [searchTerm, setSearchTerm] = useState<number | string>();
 
   useEffect(() => {
     fetchPolicies();
@@ -75,6 +78,17 @@ const PolicyList: React.FC = () => {
     setCurrentPage((currentPage) => Math.max(currentPage - 1, 1));
   };
 
+  const handleSearch = (searchTerm: string | number) => {
+    setSearchTerm(searchTerm);
+    const filtered = policies.filter(
+      (policy) =>
+        policy.numero.toString().includes(String(searchTerm)) ||
+        policy.segurado.nome.includes(String(searchTerm)) ||
+        policy.segurado.email.includes(String(searchTerm))
+    );
+    setFilteredItems(filtered);
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -90,6 +104,7 @@ const PolicyList: React.FC = () => {
           Adicionar Apólice
         </button>
       </div>
+      <SearchBar onSearch={handleSearch} />
       <table>
         <thead>
           <tr>
@@ -101,40 +116,89 @@ const PolicyList: React.FC = () => {
             <th></th>
           </tr>
         </thead>
-        <tbody>
-          {policies.map((policy) => (
-            <tr key={policy.id} className="policy-item">
-              <td className="table-content">{policy.id}</td>
-              <td className="table-content">{policy.numero}</td>
-              <td className="table-content">{policy.segurado.nome}</td>
-              <td className="table-content">{policy.valor_premio}</td>
-              <td className="coverage-cell table-content hide-on-mobile">
-                {policy.coberturas.map((cobertura, index) => (
-                  <span key={index} className="coverage-item">
-                    {cobertura.nome}
-                  </span>
-                ))}
-              </td>
-              <td className="action-buttons">
-                <button
-                  className="btn btn-edit"
-                  onClick={() => handleOpenModal("edit", policy)}
-                >
-                  <FaEdit />
-                </button>
-                <button
-                  className="btn btn-delete"
-                  onClick={() => handleOpenModal("del", policy)}
-                >
-                  <FaTrashAlt />
-                </button>
-                <Link to={`/apolices/${policy.id}`} className="btn btn-details">
-                  <FaInfoCircle />
-                </Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+
+        {searchTerm && (
+          <tbody>
+            {filteredItems.length > 0 ? (
+              filteredItems.map((filtered) => (
+                <tr key={filtered.id} className="policy-item">
+                  <td className="table-content">{filtered.id}</td>
+                  <td className="table-content">{filtered.numero}</td>
+                  <td className="table-content">{filtered.segurado.nome}</td>
+                  <td className="table-content">{filtered.valor_premio}</td>
+                  <td className="coverage-cell table-content hide-on-mobile">
+                    {filtered.coberturas.map((cobertura, index) => (
+                      <span key={index} className="coverage-item">
+                        {cobertura.nome}
+                      </span>
+                    ))}
+                  </td>
+                  <td className="action-buttons">
+                    <button
+                      className="btn btn-edit"
+                      onClick={() => handleOpenModal("edit", filtered)}
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="btn btn-delete"
+                      onClick={() => handleOpenModal("del", filtered)}
+                    >
+                      <FaTrashAlt />
+                    </button>
+                    <Link
+                      to={`/apolices/${filtered.id}`}
+                      className="btn btn-details"
+                    >
+                      <FaInfoCircle />
+                    </Link>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <li>No items found.</li>
+            )}
+          </tbody>
+        )}
+        {!searchTerm && (
+          <tbody>
+            {policies.map((policy) => (
+              <tr key={policy.id} className="policy-item">
+                <td className="table-content">{policy.id}</td>
+                <td className="table-content">{policy.numero}</td>
+                <td className="table-content">{policy.segurado.nome}</td>
+                <td className="table-content">{policy.valor_premio}</td>
+                <td className="coverage-cell table-content hide-on-mobile">
+                  {policy.coberturas.map((cobertura, index) => (
+                    <span key={index} className="coverage-item">
+                      {cobertura.nome}
+                    </span>
+                  ))}
+                </td>
+                <td className="action-buttons">
+                  <button
+                    className="btn btn-edit"
+                    onClick={() => handleOpenModal("edit", policy)}
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    className="btn btn-delete"
+                    onClick={() => handleOpenModal("del", policy)}
+                  >
+                    <FaTrashAlt />
+                  </button>
+                  <Link
+                    to={`/apolices/${policy.id}`}
+                    className="btn btn-details"
+                  >
+                    <FaInfoCircle />
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        )}
       </table>
 
       <div className="pagination-wrapper">
