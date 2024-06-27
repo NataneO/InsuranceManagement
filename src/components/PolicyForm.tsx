@@ -1,34 +1,25 @@
-import React, { useEffect } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { ModalProps } from '../types';
+import  PolicyDetails  from './PolicyDetails';
 
-export const PolicyForm: React.FC<ModalProps> = ({ isOpen, onClose, onSave, title, id }) => {
-  const modalStyle = {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: 'white',
-    padding: '20px',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-    zIndex: 1000,
-    minWidth: '400px',
-    maxWidth: '80%',
-  };
+const PolicyForm: React.FC<ModalProps> = ({ isOpen, onClose, onSave, title, id, mode }) => {
 
-  const backdropStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    zIndex: 999,
-  };
-
+  
   const validationSchema = Yup.object().shape({
-    numero: Yup.number().required('Número é obrigatório'),
+    numero: Yup.number()
+      .required('Número é obrigatório')
+      .test('unique-numero', 'Número da apolice já cadastrado', async function (value) {
+        if (mode === 'add') {
+          const response = await fetch(`/api/apolices`);
+          const data = await response.json();
+          const isUnique = data.content.every((policy: { numero: number; }) => policy.numero !== value);
+          return isUnique;
+        } else {
+          return true;
+        }
+      }),
     valor_premio: Yup.number().required('Valor do prêmio é obrigatório'),
     segurado: Yup.object().shape({
       nome: Yup.string().required('Nome do segurado é obrigatório'),
@@ -45,7 +36,7 @@ export const PolicyForm: React.FC<ModalProps> = ({ isOpen, onClose, onSave, titl
 
   const handleSubmit = async (values: any) => {
     try {
-      const response = id 
+      const response = id
         ? await fetch(`/api/apolices/${id}`, {
             method: 'PUT',
             headers: {
@@ -74,8 +65,7 @@ export const PolicyForm: React.FC<ModalProps> = ({ isOpen, onClose, onSave, titl
   if (!isOpen) return null;
 
   return (
-    <div style={backdropStyle}>
-      <div style={modalStyle}>
+   
         <Formik
           initialValues={{
             numero: '',
@@ -87,10 +77,9 @@ export const PolicyForm: React.FC<ModalProps> = ({ isOpen, onClose, onSave, titl
           onSubmit={handleSubmit}
           enableReinitialize={true}
         >
-          {({ setValues }) => {
+          {({ values, setValues }) => {
             useEffect(() => {
-              if (id) {
-                // Carregar dados da apólice existente
+                 if (id) {
                 fetch(`/api/apolices/${id}`)
                   .then(response => response.json())
                   .then(data => {
@@ -141,21 +130,32 @@ export const PolicyForm: React.FC<ModalProps> = ({ isOpen, onClose, onSave, titl
                   </label>
                 </div>
 
-                <div>
-                  <label>
-                    Nome da Cobertura:
-                    <Field type="text" name="coberturas[0].nome" />
-                    <ErrorMessage name="coberturas[0].nome" component="div" className="error" />
-                  </label>
-                </div>
-                <div>
-                  <label>
-                    Valor da Cobertura:
-                    <Field type="number" name="coberturas[0].valor" />
-                    <ErrorMessage name="coberturas[0].valor" component="div" className="error" />
-                  </label>
-                </div>
-      
+       
+                  <FieldArray name="coberturas">
+                    {({ push, remove }) => (
+                      <div>
+                        {values.coberturas.map((_cobertura, index) => (
+                          <div key={index}>
+                            <label>
+                              Nome da Cobertura:
+                              <Field type="text" name={`coberturas[${index}].nome`} />
+                              <ErrorMessage name={`coberturas[${index}].nome`} component="div" className="error" />
+                            </label>
+                            <label>
+                              Valor da Cobertura:
+                              <Field type="number" name={`coberturas[${index}].valor`} />
+                              <ErrorMessage name={`coberturas[${index}].valor`} component="div" className="error" />
+                            </label>
+                            <button type="button" onClick={() => remove(index)}>Remover Cobertura</button>
+                          </div>
+                        ))}
+                        <button type="button" onClick={() => push({ nome: '', valor: '' })}>
+                          Adicionar Cobertura
+                        </button>
+                      </div>
+                    )}
+                  </FieldArray>
+                                 
                 <div className="modal-actions">
                   <button type="submit">Salvar</button>
                   <button type="button" onClick={onClose}>Cancelar</button>
@@ -164,7 +164,8 @@ export const PolicyForm: React.FC<ModalProps> = ({ isOpen, onClose, onSave, titl
             );
           }}
         </Formik>
-      </div>
-    </div>
+
   );
 };
+
+export default PolicyForm;

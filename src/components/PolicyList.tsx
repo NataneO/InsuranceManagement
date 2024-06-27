@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Policy } from '../types';
 import axios from 'axios';
 import { makeServer } from '../mocks/server';
-import { PolicyForm } from './PolicyForm';
+import PolicyForm  from './PolicyForm';
+import PolicyModalContent from './PolicyModalContent';
+import { Link } from 'react-router-dom';
 
 if (process.env.NODE_ENV === "development") {
   makeServer();
@@ -13,10 +15,10 @@ const PolicyList: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
-  const [modalMode, setModalMode] = useState<'add' | 'edit' | ''>('');
+  const [modalMode, setModalMode] = useState<'add' | 'edit' | 'del' |''>('');
   const [itemId, setItemId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, _setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
 
   // Estilos para a tabela
@@ -72,27 +74,23 @@ const PolicyList: React.FC = () => {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    try {
-      await axios.delete(`/api/apolices/${id}`);
-      fetchPolicies();
-    } catch (error) {
-      console.error('Error deleting policy:', error);
-    }
-  };
+ 
   
   const handleSavePolicy = async () => {
     setIsModalOpen(false);
     await fetchPolicies(); 
   };
 
-  const handleOpenModal = (mode: 'add' | 'edit', policy?: Policy) => {
+  const handleOpenModal = (mode: 'add' | 'edit' | 'del', policy?: Policy) => {
     setModalMode(mode);
     if (mode === 'add') {
       setModalTitle('Adicionar Apólice');
       setItemId(null);
     } else if (mode === 'edit' && policy) {
       setModalTitle('Editar Apólice');
+      setItemId(policy.id);
+    } else if (mode === 'del' && policy){
+      setModalTitle('Deletar apólice');
       setItemId(policy.id);
     }
     setIsModalOpen(true);
@@ -142,7 +140,8 @@ const PolicyList: React.FC = () => {
               </td>
               <td style={tdStyles}>
                 <button style={{ ...buttonStyles, backgroundColor: '#4CAF50' }} onClick={() => handleOpenModal('edit', policy)}>Editar</button>
-                <button style={{ ...buttonStyles, backgroundColor: '#f44336' }} onClick={() => handleDelete(policy.id)}>Excluir</button>
+                <button style={{ ...buttonStyles, backgroundColor: '#f44336' }} onClick={() => handleOpenModal('del', policy)}>Excluir</button>
+                <Link to={`/apolices/${policy.id}`}>{policy.numero}</Link>
               </td>
             </tr>
           ))}
@@ -158,10 +157,9 @@ const PolicyList: React.FC = () => {
       </div>
       <button style={{ ...buttonStyles, margin: '20px', backgroundColor: '#4CAF50' }} onClick={() => handleOpenModal('add')}>Adicionar Apólice</button>
 
-      //TODO: Colocar component modal aqui
-      
-      <PolicyForm isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSavePolicy} title={modalTitle} id={itemId}>
-      </PolicyForm>
+    //TODO: Colocar component modal aqui
+      <PolicyModalContent isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleSavePolicy} title={modalTitle} id={itemId} mode={modalMode}>
+      </PolicyModalContent>
     </div>
   );
 };

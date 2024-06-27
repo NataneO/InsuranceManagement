@@ -20,4 +20,5 @@ export interface Policy {
     onSave: () => void;
     title: string;
     id?: number;
+    mode: string;
   }

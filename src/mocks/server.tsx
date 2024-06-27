@@ -65,20 +65,25 @@ export function makeServer() {
       });
 
       this.post('/apolices', (schema, request) => {
-        let attrs = JSON.parse(request.requestBody) ;
-        let policies = schema.all('policy').models as Policy[]; 
+        let attrs = JSON.parse(request.requestBody);
+        let policies = schema.all('policy').models as Policy[];
+        
+        // Check if the policy number already exists
+        let existingPolicy = policies.find(policy => policy.numero === attrs.numero);
+        if (existingPolicy) {
+          return new Response();
+        }
+        
         let lastId = policies.length > 0 ? policies[policies.length - 1].id : 0;
         let id = lastId + 1;
       
-        
         const newPolicy = schema.create('policy', {
           ...attrs,
-          id: id, 
+          id: id,
         });
       
-        return newPolicy.attrs; 
+        return newPolicy.attrs;
       });
-
       this.put('/apolices/:id', (schema, request) => {
         let newAttrs = JSON.parse(request.requestBody) as Partial<Policy>; 
         let id = request.params.id;

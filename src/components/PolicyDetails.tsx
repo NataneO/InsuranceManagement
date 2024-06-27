@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Policy } from '../types';
 
 interface PolicyDetailsParams {
   id: number; 
 }
 
-export const PolicyDetails: React.FC = () => {
+ const PolicyDetails: React.FC = () => {
   const { id } = useParams<PolicyDetailsParams>();
   const [policy, setPolicy] = useState<Policy | undefined>(undefined);
 
@@ -30,9 +30,12 @@ export const PolicyDetails: React.FC = () => {
 
   return (
     <div>
+       <Link to={`/`}>Voltar</Link>
       <h1>Policy Details</h1>
       <p>Número: {policy.numero}</p>
       <p>Valor Prêmio: {policy.valor_premio}</p>
     </div>
   );
 };
+
+export default PolicyDetails;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import  PolicyList  from './components/PolicyList';
-import { PolicyDetails } from './components/PolicyDetails';
+import  PolicyDetails  from './components/PolicyDetails';
 
 
  const App: React.FC = () => {
