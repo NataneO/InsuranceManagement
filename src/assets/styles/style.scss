@@ -204,6 +204,8 @@ thead {
   max-width: 500px;
   padding: $modal-padding;
   width: 70%;
+  overflow-y: scroll;
+  max-height: 80%;
 }
 
 .policy-number {
@@ -243,4 +245,33 @@ thead {
   display: flex;
   flex-direction: row;
   width: 90%;
+}
+
+
+@media (max-width: 768px) {
+  
+.policy-itemHeader{
+  flex-direction: column;
+}
+
+.h1{
+  font-size: 32px;
+
+ 
+}
+table {
+  th:nth-child(5),
+  td:nth-child(5) {
+    display: none;
+  }
+}
+}
+
+@media (max-width: 480px) {
+  table {
+    th:nth-child(4),
+    td:nth-child(4) {
+      display: none;
+    }
+  }
 }

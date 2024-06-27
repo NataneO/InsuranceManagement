@@ -82,7 +82,7 @@ const PolicyList: React.FC = () => {
   return (
     <div className="container-wrapper">
       <div className="policy-itemHeader">
-        <h1>Listagem de apólices</h1>
+        <h1 className="h1">Listagem de apólices</h1>
         <button
           className="btn-add-policy"
           onClick={() => handleOpenModal("add")}
@@ -108,7 +108,7 @@ const PolicyList: React.FC = () => {
               <td className="table-content">{policy.numero}</td>
               <td className="table-content">{policy.segurado.nome}</td>
               <td className="table-content">{policy.valor_premio}</td>
-              <td className="coverage-cell table-content">
+              <td className="coverage-cell table-content hide-on-mobile">
                 {policy.coberturas.map((cobertura, index) => (
                   <span key={index} className="coverage-item">
                     {cobertura.nome}

@@ -31,10 +31,10 @@ const PolicyDetails = () => {
         {" "}
         <FaArrowLeft />{" "}
       </Link>
-      <h1>Detalhes da apólice</h1>
+      <h1 className="h1">Detalhes da apólice</h1>
       <div>
         <div>
-          <div class="policy-number">Apólice {policy.numero}</div>
+          <div className="policy-number">Apólice {policy.numero}</div>
 
           <p>
             <span className="bold">ID: </span>
