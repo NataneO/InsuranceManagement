@@ -14,10 +14,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   };
 
   return (
-    <div>
+    <div className="search-wrapper">
       <input
         type="text"
-        placeholder="Search..."
+        placeholder="Número, Nome, Email..."
         value={searchTerm}
         onChange={handleChange}
       />

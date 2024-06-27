@@ -18,7 +18,6 @@ $border-radius: 4px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
 }
 
 .btn {
@@ -128,12 +127,13 @@ thead {
     margin-bottom: 2px;
     margin-left: 2px;
   }
+}
 
-  input {
-    border-radius: 4px;
-    height: 24px;
-    padding: 4px 8px;
-  }
+input {
+  box-sizing: border-box;
+  border-radius: 4px;
+  height: 40px;
+  padding: 8px 8px;
 }
 
 .modal-actions {
@@ -247,24 +247,34 @@ thead {
   width: 90%;
 }
 
+.search-wrapper {
+  padding: 0 20%;
+  margin-bottom: 32px;
 
-@media (max-width: 768px) {
-  
-.policy-itemHeader{
-  flex-direction: column;
-}
-
-.h1{
-  font-size: 32px;
-
- 
-}
-table {
-  th:nth-child(5),
-  td:nth-child(5) {
-    display: none;
+  input {
+    width: 100%;
   }
 }
+
+@media (max-width: 768px) {
+  .policy-itemHeader {
+    flex-direction: column;
+  }
+
+  .h1 {
+    font-size: 32px;
+  }
+  table {
+    th:nth-child(5),
+    td:nth-child(5) {
+      display: none;
+    }
+  }
+
+  .search-wrapper {
+    padding: 0;
+    margin-bottom: 32px;
+  }
 }
 
 @media (max-width: 480px) {
