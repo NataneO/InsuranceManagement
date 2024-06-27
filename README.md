@@ -1,30 +1,54 @@
-# React + TypeScript + Vite
+# Insurance Management Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+This project is a web application for managing insurance policies. It is built using modern web technologies such as React, TypeScript, and Vite. The project also incorporates various libraries and tools to enhance development, testing, and styling processes.
 
-Currently, two official plugins are available:
+## Project Structure
+- **src/**: Contains all the source code for the application.
+- **public/**: Contains static assets like images and the HTML template.
+- **node_modules/**: Contains all the project dependencies.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
+- **React**: For building the user interface.
+- **TypeScript**: For static type checking.
+- **React Router DOM**: For client-side routing.
+- **Axios**: For making HTTP requests.
+- **Formik & Yup**: For form handling and validation.
+- **Styled Components**: For CSS-in-JS styling.
+- **Node-sass**: For compiling SCSS files to CSS.
+- **MirageJS**: For mocking APIs during development.
+- **React Icons**: For including icons in the UI.
+- **Testing Library (React Testing Library & Jest)**: For writing and running tests.
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## Installation
+Clone the repository:
+```bash
+git clone https://github.com/your-username/insurance-management.git
+cd insurance-management
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Install dependencies:
+```bash
+npm install
+```
+
+Run the development server:
+```bash
+npm run dev
+```
+
+## Scripts
+
+- dev: Starts the development server with Vite.
+- build: Compiles TypeScript and builds the application with Vite.
+- test: Runs the test suite using Jest.
+
+
+## How to Run Tests
+To run the test suite, execute the following command:
+
+```bash
+npm run test
+```
+
+This command will run all the tests defined in the project using Jest and React Testing Library.
